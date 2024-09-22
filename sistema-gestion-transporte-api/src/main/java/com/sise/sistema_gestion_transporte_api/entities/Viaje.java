@@ -2,6 +2,8 @@ package com.sise.sistema_gestion_transporte_api.entities;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -41,9 +43,11 @@ public class Viaje {
     private LocalDateTime fechaArribo;
 
     @Column(name = "estado_auditoria", insertable = false, updatable = false)
+    @JsonIgnore
     private String estadoAuditoria;
 
     @Column(name = "fecha_creacion", insertable = false, updatable = false)
+    @JsonIgnore
     private LocalDateTime fechaCreacion;
 
 }

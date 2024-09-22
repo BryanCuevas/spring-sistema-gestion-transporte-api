@@ -26,11 +26,11 @@ public class Ruta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idRuta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_almacen_origen", referencedColumnName = "id_almacen")
     private Almacen almacenOrigen;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_almacen_destino", referencedColumnName = "id_almacen")
     private Almacen almacenDestino;
 
