@@ -49,4 +49,14 @@ public class Ruta {
     @JsonIgnore
     private List<Viaje> viajesAsignados;
 
+    public void setAlmacenOrigen(Integer idAlmacenOrigen) {
+        this.almacenOrigen = new Almacen();
+        this.almacenOrigen.setIdAlmacen(idAlmacenOrigen);
+    }
+
+    public void setAlmacenDestino(Integer idAlmacenDestino) {
+        this.almacenDestino = new Almacen();
+        this.almacenDestino.setIdAlmacen(idAlmacenDestino);
+    }
+
 }
