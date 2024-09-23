@@ -19,7 +19,7 @@ import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("viajes")
+@RequestMapping("/viajes")
 public class ViajeController {
     @Autowired
     private IViajeService viajeService;

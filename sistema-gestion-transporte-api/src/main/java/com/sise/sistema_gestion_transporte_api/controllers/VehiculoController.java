@@ -19,7 +19,7 @@ import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("vehiculos")
+@RequestMapping("/vehiculos")
 public class VehiculoController {
     @Autowired
     private IVehiculoService vehiculoService;
