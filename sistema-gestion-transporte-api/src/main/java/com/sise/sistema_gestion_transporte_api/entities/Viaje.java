@@ -56,13 +56,13 @@ public class Viaje {
     }
 
     public void setConductor(Integer idConductor) {
-        this.vehiculo = new Vehiculo();
-        this.vehiculo.setIdVehiculo(idConductor);
+        this.conductor = new Conductor();
+        this.conductor.setIdConductor(idConductor);
     }
 
     public void setRuta(Integer idRuta) {
-        this.vehiculo = new Vehiculo();
-        this.vehiculo.setIdVehiculo(idRuta);
+        this.ruta = new Ruta();
+        this.ruta.setIdRuta(idRuta);
     }
 
 }
