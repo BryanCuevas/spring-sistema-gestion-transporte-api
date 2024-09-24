@@ -29,7 +29,7 @@ public class BaseResponse {
     }
 
     public static BaseResponse errorNotFound() {
-        return error("Recursos no encontrado");
+        return error("Recurso no encontrado");
     }
 
 }
