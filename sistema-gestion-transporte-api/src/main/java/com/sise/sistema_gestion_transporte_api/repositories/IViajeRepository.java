@@ -1,5 +1,7 @@
 package com.sise.sistema_gestion_transporte_api.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,11 +12,9 @@ import com.sise.sistema_gestion_transporte_api.entities.Viaje;
 
 import jakarta.transaction.Transactional;
 
-import java.util.List;
-
 @Repository
 public interface IViajeRepository extends JpaRepository<Viaje, Integer> {
-    List<Viaje> findByEstadoAuditoria(String estadoAuditoria);
+    Page<Viaje> findByEstadoAuditoria(String estadoAuditoria, Pageable pageable);
 
     Viaje findOneByIdViajeAndEstadoAuditoria(Integer idViaje, String estadoAuditoria);
 

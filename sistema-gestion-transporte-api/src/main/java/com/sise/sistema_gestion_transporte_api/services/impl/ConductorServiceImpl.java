@@ -1,8 +1,8 @@
 package com.sise.sistema_gestion_transporte_api.services.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.sise.sistema_gestion_transporte_api.entities.Conductor;
@@ -15,8 +15,8 @@ public class ConductorServiceImpl implements IConductorService {
     IConductorRepository conductorRepository;
 
     @Override
-    public List<Conductor> listarConductores() throws Exception {
-        return conductorRepository.findByEstadoAuditoria("1");
+    public Page<Conductor> listarConductores(Pageable pageable) throws Exception {
+        return conductorRepository.findByEstadoAuditoria("1", pageable);
     }
 
     @Override

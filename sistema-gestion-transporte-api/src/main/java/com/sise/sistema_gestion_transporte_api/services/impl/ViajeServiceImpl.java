@@ -1,8 +1,8 @@
 package com.sise.sistema_gestion_transporte_api.services.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.sise.sistema_gestion_transporte_api.entities.Viaje;
@@ -15,8 +15,8 @@ public class ViajeServiceImpl implements IViajeService {
     IViajeRepository viajeService;
 
     @Override
-    public List<Viaje> listarViajes() throws Exception {
-        return viajeService.findByEstadoAuditoria("1");
+    public Page<Viaje> listarViajes(Pageable pageable) throws Exception {
+        return viajeService.findByEstadoAuditoria("1", pageable);
     }
 
     @Override

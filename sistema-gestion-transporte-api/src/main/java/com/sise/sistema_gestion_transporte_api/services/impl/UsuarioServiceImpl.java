@@ -1,8 +1,8 @@
 package com.sise.sistema_gestion_transporte_api.services.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.sise.sistema_gestion_transporte_api.entities.Usuario;
@@ -15,8 +15,8 @@ public class UsuarioServiceImpl implements IUsuarioService {
     IUsuarioRepository usuarioRepository;
 
     @Override
-    public List<Usuario> listarUsuarios() throws Exception {
-        return usuarioRepository.findByEstadoAuditoria("1");
+    public Page<Usuario> listarUsuarios(Pageable pageable) throws Exception {
+        return usuarioRepository.findByEstadoAuditoria("1", pageable);
     }
 
     @Override

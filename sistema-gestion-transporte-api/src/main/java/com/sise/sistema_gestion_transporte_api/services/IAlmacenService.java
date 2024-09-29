@@ -1,11 +1,12 @@
 package com.sise.sistema_gestion_transporte_api.services;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.sise.sistema_gestion_transporte_api.entities.Almacen;
 
 public interface IAlmacenService {
-    List<Almacen> listarAlmacenes() throws Exception;
+    Page<Almacen> listarAlmacenes(Pageable pageable) throws Exception;
     Almacen obtenerAlmacen(Integer idAlmacen) throws Exception;
     Almacen insertarAlmacen(Almacen almacen) throws Exception;
     Almacen actualizarAlmacen(Almacen almacen) throws Exception;

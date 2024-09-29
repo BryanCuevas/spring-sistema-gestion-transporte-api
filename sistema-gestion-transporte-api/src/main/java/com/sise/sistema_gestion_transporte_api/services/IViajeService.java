@@ -1,11 +1,12 @@
 package com.sise.sistema_gestion_transporte_api.services;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.sise.sistema_gestion_transporte_api.entities.Viaje;
 
 public interface IViajeService {
-    List<Viaje> listarViajes() throws Exception;
+    Page<Viaje> listarViajes(Pageable pageable) throws Exception;
     Viaje obtenerViaje(Integer idViaje) throws Exception;
     Viaje insertarViaje(Viaje viaje) throws Exception;
     Viaje actualizarViaje(Viaje viaje) throws Exception;
