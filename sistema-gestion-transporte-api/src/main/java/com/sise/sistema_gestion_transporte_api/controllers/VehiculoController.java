@@ -16,10 +16,13 @@ import com.sise.sistema_gestion_transporte_api.entities.Vehiculo;
 import com.sise.sistema_gestion_transporte_api.services.IVehiculoService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
+@Tag(name = "Gestión de vehículos", description = "Operaciones relacionadas con la gestión de vehículos")
 @RestController
-@RequestMapping("/vehiculos")
+@RequestMapping("/api/vehiculos")
 public class VehiculoController {
     @Autowired
     private IVehiculoService vehiculoService;
@@ -87,4 +90,5 @@ public class VehiculoController {
             return new ResponseEntity<>(BaseResponse.error(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
 }

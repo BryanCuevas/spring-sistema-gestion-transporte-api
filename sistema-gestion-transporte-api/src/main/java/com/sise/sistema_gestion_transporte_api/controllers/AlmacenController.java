@@ -16,10 +16,13 @@ import com.sise.sistema_gestion_transporte_api.entities.Almacen;
 import com.sise.sistema_gestion_transporte_api.services.IAlmacenService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
+@Tag(name = "Gestión de almacenes", description = "Operaciones relacionadas con la gestión de almacenes")
 @RestController
-@RequestMapping("/almacenes")
+@RequestMapping("/api/almacenes")
 public class AlmacenController {
     @Autowired
     private IAlmacenService almacenService;

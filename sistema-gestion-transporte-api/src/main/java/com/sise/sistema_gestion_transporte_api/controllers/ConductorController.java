@@ -16,10 +16,13 @@ import com.sise.sistema_gestion_transporte_api.entities.Conductor;
 import com.sise.sistema_gestion_transporte_api.services.IConductorService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
+@Tag(name = "Gestión de conductores", description = "Operaciones relacionadas con la gestión de conductores")
 @RestController
-@RequestMapping("/conductores")
+@RequestMapping("/api/conductores")
 public class ConductorController {
     @Autowired
     private IConductorService conductorService;

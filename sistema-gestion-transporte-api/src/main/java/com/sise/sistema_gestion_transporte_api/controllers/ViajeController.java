@@ -16,14 +16,20 @@ import com.sise.sistema_gestion_transporte_api.entities.Viaje;
 import com.sise.sistema_gestion_transporte_api.services.IViajeService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
+@Tag(name = "Gestión de viajes", description = "Operaciones relacionadas con la gestión de viajes")
 @RestController
-@RequestMapping("/viajes")
+@RequestMapping("/api/viajes")
 public class ViajeController {
     @Autowired
     private IViajeService viajeService;
 
+    @Operation(summary = "Listar viajes", description = "Este endpoint permite listar todos los viajes solo si " + 
+    "el campo estado_auditoria es igual a '1'")
     @GetMapping("")
     public ResponseEntity<BaseResponse> listarViajes() {
         try {
@@ -34,6 +40,8 @@ public class ViajeController {
         }
     }
 
+    @Operation(summary = "Buscar viajes", description = "Este endpoint permite listar un viaje solo si " + 
+    "el campo estado_auditoria es igual a '1'")
     @GetMapping("/{idViaje}")
     public ResponseEntity<BaseResponse> obtenerViaje(@PathVariable Integer idViaje) {
         try {
@@ -49,6 +57,7 @@ public class ViajeController {
         }
     }
 
+    @Operation(summary = "Insertar viajes", description = "Este endpoint permite insertar un viaje")
     @PostMapping("")
     public ResponseEntity<BaseResponse> insertarViaje(@RequestBody Viaje viajeInsertar) {
         try {
@@ -59,6 +68,7 @@ public class ViajeController {
         }
     }
 
+    @Operation(summary = "Actualizar viajes", description = "Este endpoint permite actualizar un viaje")
     @PutMapping("/{idViaje}")
     public ResponseEntity<BaseResponse> actualizarViaje(@PathVariable Integer idViaje, @RequestBody Viaje viajeActualizar) {
         try {
@@ -74,6 +84,8 @@ public class ViajeController {
         }
     }
 
+    @Operation(summary = "Eliminar viajes", description = "Este endpoint permite eliminar lógicamente un viaje, " + 
+    "cambiando el campo estado_auditoria a '0'")
     @PatchMapping("/dar-baja/{idViaje}")
     public ResponseEntity<BaseResponse> darBajaViaje(@PathVariable Integer idViaje) {
         try {
@@ -87,4 +99,5 @@ public class ViajeController {
             return new ResponseEntity<>(BaseResponse.error(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
 }

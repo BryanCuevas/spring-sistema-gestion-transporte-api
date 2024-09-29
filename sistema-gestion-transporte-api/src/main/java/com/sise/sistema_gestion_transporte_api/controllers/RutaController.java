@@ -16,10 +16,13 @@ import com.sise.sistema_gestion_transporte_api.entities.Ruta;
 import com.sise.sistema_gestion_transporte_api.services.IRutaService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
+@Tag(name = "Gestión de rutas", description = "Operaciones relacionadas con la gestión de rutas")
 @RestController
-@RequestMapping("/rutas")
+@RequestMapping("/api/rutas")
 public class RutaController {
     @Autowired
     private IRutaService rutaService;
