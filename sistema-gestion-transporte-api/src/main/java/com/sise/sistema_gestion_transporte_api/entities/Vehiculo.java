@@ -36,6 +36,12 @@ public class Vehiculo {
     @Column(name = "soat")
     private String soat;
 
+    @Column(name = "peso_bruto")
+    private String pesoBruto;
+
+    @Column(name = "peso_neto")
+    private String pesoNeto;
+
     @Column(name = "foto")
     private String foto;
 

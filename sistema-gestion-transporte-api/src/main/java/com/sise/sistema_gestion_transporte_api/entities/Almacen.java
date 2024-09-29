@@ -24,6 +24,15 @@ public class Almacen {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idAlmacen;
 
+    @Column(name = "departamento")
+    private String departamento;
+
+    @Column(name = "provincia")
+    private String provincia;
+
+    @Column(name = "distrito")
+    private String distrito;
+
     @Column(name = "nombre")
     private String nombre;
 
@@ -32,6 +41,9 @@ public class Almacen {
 
     @Column(name = "longitud")
     private String longitud;
+
+    @Column(name = "foto")
+    private String foto;
 
     @Column(name = "estado_auditoria", insertable = false, updatable = false)
     @JsonIgnore

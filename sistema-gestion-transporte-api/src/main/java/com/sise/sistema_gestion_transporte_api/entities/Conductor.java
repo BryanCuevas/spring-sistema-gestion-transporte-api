@@ -11,7 +11,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -23,6 +25,10 @@ public class Conductor {
     @Column(name = "id_conductor")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idConductor;
+
+    @OneToOne
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
+    private Usuario usuario;
 
     @Column(name = "nombres")
     private String nombres;
@@ -38,6 +44,9 @@ public class Conductor {
 
     @Column(name = "telefono")
     private String telefono;
+
+    @Column(name = "correo")
+    private String correo;
 
     @Column(name = "licencia")
     private String licencia;
@@ -56,5 +65,10 @@ public class Conductor {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "conductor")
     @JsonIgnore
     private List<Viaje> viajesAsignados;
+
+    public void setIdUsuario(Integer idUsuario) {
+        this.usuario = new Usuario();
+        this.usuario.setIdUsuario(idUsuario);
+    }
 
 }

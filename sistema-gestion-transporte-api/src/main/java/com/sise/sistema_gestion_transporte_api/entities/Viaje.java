@@ -1,6 +1,5 @@
 package com.sise.sistema_gestion_transporte_api.entities;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,11 +35,20 @@ public class Viaje {
     @JoinColumn(name = "id_ruta", referencedColumnName = "id_ruta")
     private Ruta ruta;
 
+    @Column(name = "fecha_programada_salida")
+    private LocalDateTime fechaProgramadaSalida;
+
+    @Column(name = "fecha_programada_arribo")
+    private LocalDateTime fechaProgramadaArribo;
+
     @Column(name = "fecha_salida")
-    private LocalDate fechaSalida;
+    private LocalDateTime fechaSalida;
 
     @Column(name = "fecha_arribo")
-    private LocalDate fechaArribo;
+    private LocalDateTime fechaArribo;
+
+    @Column(name = "estado_viaje")
+    private String estadoViaje;
 
     @Column(name = "estado_auditoria", insertable = false, updatable = false)
     @JsonIgnore

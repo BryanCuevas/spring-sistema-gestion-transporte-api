@@ -36,6 +36,9 @@ public class Ruta {
 
     @Column(name = "nombre")
     private String nombre;
+
+    @Column(name = "estado_ruta")
+    private String estadoRuta;
     
     @Column(name = "estado_auditoria", insertable = false, updatable = false)
     @JsonIgnore
