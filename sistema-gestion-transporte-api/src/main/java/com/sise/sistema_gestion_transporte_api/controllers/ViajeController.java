@@ -1,6 +1,11 @@
 package com.sise.sistema_gestion_transporte_api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sise.sistema_gestion_transporte_api.entities.Viaje;
@@ -19,21 +25,21 @@ import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import java.util.List;
-
-@Tag(name = "Gestión de viajes", description = "Operaciones relacionadas con la gestión de viajes")
+@Tag(name = "Viajes", description = "Operaciones relacionadas con la gestión de viajes")
 @RestController
 @RequestMapping("/api/viajes")
 public class ViajeController {
     @Autowired
     private IViajeService viajeService;
 
-    @Operation(summary = "Listar viajes", description = "Este endpoint permite listar todos los viajes solo si " + 
-    "el campo estado_auditoria es igual a '1'")
+    @Operation(summary = "Listar viajes", description = "Este endpoint permite listar los viajes con " + 
+    "el campo estado_auditoria igual a '1'")
     @GetMapping("")
-    public ResponseEntity<BaseResponse> listarViajes() {
+    public ResponseEntity<BaseResponse> listarViajes(@PageableDefault(size = 4) Pageable pageable , 
+    @RequestParam(defaultValue = "idViaje") String sortBy) {
         try {
-            List<Viaje> viajes = viajeService.listarViajes();
+            Pageable paginaOrdenada = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(sortBy));
+            Page<Viaje> viajes = viajeService.listarViajes(paginaOrdenada);
             return new ResponseEntity<>(BaseResponse.success(viajes), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(BaseResponse.error(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);

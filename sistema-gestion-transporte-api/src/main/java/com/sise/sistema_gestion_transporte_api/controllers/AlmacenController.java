@@ -1,6 +1,11 @@
 package com.sise.sistema_gestion_transporte_api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,33 +15,39 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sise.sistema_gestion_transporte_api.entities.Almacen;
 import com.sise.sistema_gestion_transporte_api.services.IAlmacenService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import java.util.List;
-
-@Tag(name = "Gestión de almacenes", description = "Operaciones relacionadas con la gestión de almacenes")
+@Tag(name = "Almacenes", description = "Operaciones relacionadas con la gestión de almacenes")
 @RestController
 @RequestMapping("/api/almacenes")
 public class AlmacenController {
     @Autowired
     private IAlmacenService almacenService;
 
+    @Operation(summary = "Listar almacenes", description = "Este endpoint permite listar los almacenes con " + 
+    "el campo estado_auditoria igual a '1'")
     @GetMapping("")
-    public ResponseEntity<BaseResponse> listarAlmacenes() {
+    public ResponseEntity<BaseResponse> listarAlmacenes(@PageableDefault(size = 4) Pageable pageable , 
+    @RequestParam(defaultValue = "idAlmacen") String sortBy) {
         try {
-            List<Almacen> almacenes = almacenService.listarAlmacenes();
+            Pageable paginaOrdenada = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(sortBy));
+            Page<Almacen> almacenes = almacenService.listarAlmacenes(paginaOrdenada);
             return new ResponseEntity<>(BaseResponse.success(almacenes), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(BaseResponse.error(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @Operation(summary = "Buscar almacenes", description = "Este endpoint permite listar un almacén solo si " + 
+    "el campo estado_auditoria es igual a '1'")
     @GetMapping("/{idAlmacen}")
     public ResponseEntity<BaseResponse> obtenerAlmacen(@PathVariable Integer idAlmacen) {
         try {
@@ -52,6 +63,7 @@ public class AlmacenController {
         }
     }
 
+    @Operation(summary = "Insertar almacenes", description = "Este endpoint permite insertar un almacén")
     @PostMapping("")
     public ResponseEntity<BaseResponse> insertarAlmacen(@RequestBody Almacen almacenInsertar) {
         try {
@@ -62,6 +74,7 @@ public class AlmacenController {
         }
     }
 
+    @Operation(summary = "Actualizar almacenes", description = "Este endpoint permite actualizar un almacén")
     @PutMapping("/{idAlmacen}")
     public ResponseEntity<BaseResponse> actualizarAlmacen(@PathVariable Integer idAlmacen, @RequestBody Almacen almacenActualizar) {
         try {
@@ -77,6 +90,8 @@ public class AlmacenController {
         }
     }
 
+    @Operation(summary = "Eliminar almacenes", description = "Este endpoint permite eliminar lógicamente un almacén, " + 
+    "cambiando el campo estado_auditoria a '0'")
     @PatchMapping("/dar-baja/{idAlmacen}")
     public ResponseEntity<BaseResponse> darBajaAlmacen(@PathVariable Integer idAlmacen) {
         try {
