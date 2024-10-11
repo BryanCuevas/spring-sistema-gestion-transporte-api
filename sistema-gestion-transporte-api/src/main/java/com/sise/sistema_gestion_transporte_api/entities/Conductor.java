@@ -66,7 +66,7 @@ public class Conductor {
     @JsonIgnore
     private List<Viaje> viajesAsignados;
 
-    public void setIdUsuario(Integer idUsuario) {
+    public void setUsuario(Integer idUsuario) {
         this.usuario = new Usuario();
         this.usuario.setIdUsuario(idUsuario);
     }
