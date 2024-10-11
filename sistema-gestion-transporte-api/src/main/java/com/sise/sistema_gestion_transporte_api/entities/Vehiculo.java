@@ -37,10 +37,10 @@ public class Vehiculo {
     private String soat;
 
     @Column(name = "peso_bruto")
-    private String pesoBruto;
+    private Integer pesoBruto;
 
     @Column(name = "peso_neto")
-    private String pesoNeto;
+    private Integer pesoNeto;
 
     @Column(name = "foto")
     private String foto;
