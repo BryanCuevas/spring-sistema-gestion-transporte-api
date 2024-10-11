@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sise.sistema_gestion_transporte_api.entities.Viaje;
+import com.sise.sistema_gestion_transporte_api.mappers.ViajeMapper;
+import com.sise.sistema_gestion_transporte_api.payload.requests.ViajeRequest;
 import com.sise.sistema_gestion_transporte_api.services.IViajeService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
+import com.sise.sistema_gestion_transporte_api.shared.Util;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Viajes", description = "Operaciones relacionadas con la gestión de viajes")
 @RestController
@@ -31,6 +36,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class ViajeController {
     @Autowired
     private IViajeService viajeService;
+
+    private ViajeMapper viajeMapper;
+
+    public ViajeController() {
+        viajeMapper = new ViajeMapper();
+    }
 
     @Operation(summary = "Listar viajes", description = "Este endpoint permite listar los viajes con " + 
     "el campo estado_auditoria igual a '1'")
@@ -53,7 +64,7 @@ public class ViajeController {
         try {
             Viaje viaje = viajeService.obtenerViaje(idViaje);
 
-            if(viaje == null) {
+            if (viaje == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
 
@@ -65,9 +76,13 @@ public class ViajeController {
 
     @Operation(summary = "Insertar viajes", description = "Este endpoint permite insertar un viaje")
     @PostMapping("")
-    public ResponseEntity<BaseResponse> insertarViaje(@RequestBody Viaje viajeInsertar) {
+    public ResponseEntity<BaseResponse> insertarViaje(@Valid @RequestBody ViajeRequest viajeRequest, Errors errors) {
         try {
-            Viaje viaje = viajeService.insertarViaje(viajeInsertar);
+            if (errors.hasErrors()) {
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+
+            Viaje viaje = viajeService.insertarViaje(viajeMapper.requestToEntity(viajeRequest));
             return new ResponseEntity<>(BaseResponse.success(viaje), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(BaseResponse.error(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,13 +91,19 @@ public class ViajeController {
 
     @Operation(summary = "Actualizar viajes", description = "Este endpoint permite actualizar un viaje")
     @PutMapping("/{idViaje}")
-    public ResponseEntity<BaseResponse> actualizarViaje(@PathVariable Integer idViaje, @RequestBody Viaje viajeActualizar) {
+    public ResponseEntity<BaseResponse> actualizarViaje(@PathVariable Integer idViaje, @Valid @RequestBody ViajeRequest viajeRequest, Errors errors) {
         try {
-            if(viajeService.obtenerViaje(idViaje) == null) {
+            if (errors.hasErrors()){
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+
+            if (viajeService.obtenerViaje(idViaje) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
             
+            Viaje viajeActualizar = viajeMapper.requestToEntity(viajeRequest);
             viajeActualizar.setIdViaje(idViaje);
+
             Viaje viaje = viajeService.actualizarViaje(viajeActualizar);
             return new ResponseEntity<>(BaseResponse.success(viaje), HttpStatus.OK);
         } catch (Exception e) {
@@ -95,7 +116,7 @@ public class ViajeController {
     @PatchMapping("/dar-baja/{idViaje}")
     public ResponseEntity<BaseResponse> darBajaViaje(@PathVariable Integer idViaje) {
         try {
-            if(viajeService.obtenerViaje(idViaje) == null) {
+            if (viajeService.obtenerViaje(idViaje) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
     

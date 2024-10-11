@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sise.sistema_gestion_transporte_api.entities.Conductor;
+import com.sise.sistema_gestion_transporte_api.mappers.ConductorMapper;
+import com.sise.sistema_gestion_transporte_api.payload.requests.ConductorRequest;
 import com.sise.sistema_gestion_transporte_api.services.IConductorService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
+import com.sise.sistema_gestion_transporte_api.shared.Util;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Conductores", description = "Operaciones relacionadas con la gestión de conductores")
 @RestController
@@ -31,6 +36,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class ConductorController {
     @Autowired
     private IConductorService conductorService;
+
+    private ConductorMapper conductorMapper;
+
+    public ConductorController() {
+        conductorMapper = new ConductorMapper();
+    }
 
     @Operation(summary = "Listar conductores", description = "Este endpoint permite listar los conductores con " + 
     "el campo estado_auditoria igual a '1'")
@@ -53,7 +64,7 @@ public class ConductorController {
         try {
             Conductor conductor = conductorService.obtenerConductor(idConductor);
 
-            if(conductor == null) {
+            if (conductor == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
 
@@ -65,9 +76,13 @@ public class ConductorController {
 
     @Operation(summary = "Insertar conductor", description = "Este endpoint permite insertar un conductor")
     @PostMapping("")
-    public ResponseEntity<BaseResponse> insertarConductor(@RequestBody Conductor conductorInsertar) {
+    public ResponseEntity<BaseResponse> insertarConductor(@Valid @RequestBody ConductorRequest conductorRequest, Errors errors) {
         try {
-            Conductor conductor = conductorService.insertarConductor(conductorInsertar);
+            if (errors.hasErrors()) {
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+
+            Conductor conductor = conductorService.insertarConductor(conductorMapper.requestToEntity(conductorRequest));
             return new ResponseEntity<>(BaseResponse.success(conductor), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(BaseResponse.error(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,13 +91,19 @@ public class ConductorController {
 
     @Operation(summary = "Actualizar conductores", description = "Este endpoint permite actualizar un conductor")
     @PutMapping("/{idConductor}")
-    public ResponseEntity<BaseResponse> actualizarConductor(@PathVariable Integer idConductor, @RequestBody Conductor conductorActualizar) {
+    public ResponseEntity<BaseResponse> actualizarConductor(@PathVariable Integer idConductor, @Valid @RequestBody ConductorRequest conductorRequest, Errors errors) {
         try {
-            if(conductorService.obtenerConductor(idConductor) == null) {
+            if (errors.hasErrors()){
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+
+            if (conductorService.obtenerConductor(idConductor) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
             
+            Conductor conductorActualizar = conductorMapper.requestToEntity(conductorRequest);        
             conductorActualizar.setIdConductor(idConductor);
+
             Conductor conductor = conductorService.actualizarConductor(conductorActualizar);
             return new ResponseEntity<>(BaseResponse.success(conductor), HttpStatus.OK);
         } catch (Exception e) {
@@ -95,7 +116,7 @@ public class ConductorController {
     @PatchMapping("/dar-baja/{idConductor}")
     public ResponseEntity<BaseResponse> darBajaConductor(@PathVariable Integer idConductor) {
         try {
-            if(conductorService.obtenerConductor(idConductor) == null) {
+            if (conductorService.obtenerConductor(idConductor) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
     

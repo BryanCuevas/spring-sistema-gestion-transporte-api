@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sise.sistema_gestion_transporte_api.entities.Almacen;
+import com.sise.sistema_gestion_transporte_api.mappers.AlmacenMapper;
+import com.sise.sistema_gestion_transporte_api.payload.requests.AlmacenRequest;
 import com.sise.sistema_gestion_transporte_api.services.IAlmacenService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
+import com.sise.sistema_gestion_transporte_api.shared.Util;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Almacenes", description = "Operaciones relacionadas con la gestión de almacenes")
 @RestController
@@ -31,6 +36,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class AlmacenController {
     @Autowired
     private IAlmacenService almacenService;
+
+    private AlmacenMapper almacenMapper;
+
+    public AlmacenController() {
+        almacenMapper = new AlmacenMapper();
+    }
 
     @Operation(summary = "Listar almacenes", description = "Este endpoint permite listar los almacenes con " + 
     "el campo estado_auditoria igual a '1'")
@@ -53,7 +64,7 @@ public class AlmacenController {
         try {
             Almacen almacen = almacenService.obtenerAlmacen(idAlmacen);
 
-            if(almacen == null) {
+            if (almacen == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
 
@@ -65,9 +76,13 @@ public class AlmacenController {
 
     @Operation(summary = "Insertar almacenes", description = "Este endpoint permite insertar un almacén")
     @PostMapping("")
-    public ResponseEntity<BaseResponse> insertarAlmacen(@RequestBody Almacen almacenInsertar) {
+    public ResponseEntity<BaseResponse> insertarAlmacen(@Valid @RequestBody AlmacenRequest almacenRequest, Errors errors) {
         try {
-            Almacen almacen = almacenService.insertarAlmacen(almacenInsertar);
+            if (errors.hasErrors()) {
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+
+            Almacen almacen = almacenService.insertarAlmacen(almacenMapper.requestToEntity(almacenRequest));
             return new ResponseEntity<>(BaseResponse.success(almacen), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(BaseResponse.error(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,13 +91,19 @@ public class AlmacenController {
 
     @Operation(summary = "Actualizar almacenes", description = "Este endpoint permite actualizar un almacén")
     @PutMapping("/{idAlmacen}")
-    public ResponseEntity<BaseResponse> actualizarAlmacen(@PathVariable Integer idAlmacen, @RequestBody Almacen almacenActualizar) {
+    public ResponseEntity<BaseResponse> actualizarAlmacen(@PathVariable Integer idAlmacen,@Valid @RequestBody AlmacenRequest almacenRequest, Errors errors) {
         try {
-            if(almacenService.obtenerAlmacen(idAlmacen) == null) {
+            if (errors.hasErrors()){
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+
+            if (almacenService.obtenerAlmacen(idAlmacen) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
             
+            Almacen almacenActualizar = almacenMapper.requestToEntity(almacenRequest);
             almacenActualizar.setIdAlmacen(idAlmacen);
+
             Almacen almacen = almacenService.actualizarAlmacen(almacenActualizar);
             return new ResponseEntity<>(BaseResponse.success(almacen), HttpStatus.OK);
         } catch (Exception e) {
@@ -95,7 +116,7 @@ public class AlmacenController {
     @PatchMapping("/dar-baja/{idAlmacen}")
     public ResponseEntity<BaseResponse> darBajaAlmacen(@PathVariable Integer idAlmacen) {
         try {
-            if(almacenService.obtenerAlmacen(idAlmacen) == null) {
+            if (almacenService.obtenerAlmacen(idAlmacen) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
     

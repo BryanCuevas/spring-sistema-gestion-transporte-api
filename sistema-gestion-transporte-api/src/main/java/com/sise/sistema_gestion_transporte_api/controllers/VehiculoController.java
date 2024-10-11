@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sise.sistema_gestion_transporte_api.entities.Vehiculo;
+import com.sise.sistema_gestion_transporte_api.mappers.VehiculoMapper;
+import com.sise.sistema_gestion_transporte_api.payload.requests.VehiculoRequest;
 import com.sise.sistema_gestion_transporte_api.services.IVehiculoService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
+import com.sise.sistema_gestion_transporte_api.shared.Util;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Vehículos", description = "Operaciones relacionadas con la gestión de vehículos")
 @RestController
@@ -31,6 +36,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class VehiculoController {
     @Autowired
     private IVehiculoService vehiculoService;
+
+    private VehiculoMapper vehiculoMapper;
+
+    public VehiculoController() {
+        vehiculoMapper = new VehiculoMapper();
+    }
 
     @Operation(summary = "Listar vehículos", description = "Este endpoint permite listar los vehículos con " + 
     "el campo estado_auditoria igual a '1'")
@@ -53,7 +64,7 @@ public class VehiculoController {
         try {
             Vehiculo vehiculo = vehiculoService.obtenerVehiculo(idVehiculo);
 
-            if(vehiculo == null) {
+            if (vehiculo == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
 
@@ -65,9 +76,13 @@ public class VehiculoController {
 
     @Operation(summary = "Insertar vehículos", description = "Este endpoint permite insertar un vehículo")
     @PostMapping("")
-    public ResponseEntity<BaseResponse> insertarVehiculo(@RequestBody Vehiculo vehiculoInsertar) {
+    public ResponseEntity<BaseResponse> insertarVehiculo(@Valid @RequestBody VehiculoRequest vehiculoRequest, Errors errors) {
         try {
-            Vehiculo vehiculo = vehiculoService.insertarVehiculo(vehiculoInsertar);
+            if (errors.hasErrors()) {
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+            
+            Vehiculo vehiculo = vehiculoService.insertarVehiculo(vehiculoMapper.requestToEntity(vehiculoRequest));
             return new ResponseEntity<>(BaseResponse.success(vehiculo), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(BaseResponse.error(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,13 +91,19 @@ public class VehiculoController {
 
     @Operation(summary = "Actualizar vehículos", description = "Este endpoint permite actualizar un vehículo")
     @PutMapping("/{idVehiculo}")
-    public ResponseEntity<BaseResponse> actualizarVehiculo(@PathVariable Integer idVehiculo, @RequestBody Vehiculo vehiculoActualizar) {
+    public ResponseEntity<BaseResponse> actualizarVehiculo(@PathVariable Integer idVehiculo, @Valid @RequestBody VehiculoRequest vehiculoRequest, Errors errors) {
         try {
-            if(vehiculoService.obtenerVehiculo(idVehiculo) == null) {
+            if (errors.hasErrors()){
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+
+            if (vehiculoService.obtenerVehiculo(idVehiculo) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
             
+            Vehiculo vehiculoActualizar = vehiculoMapper.requestToEntity(vehiculoRequest);
             vehiculoActualizar.setIdVehiculo(idVehiculo);
+
             Vehiculo vehiculo = vehiculoService.actualizarVehiculo(vehiculoActualizar);
             return new ResponseEntity<>(BaseResponse.success(vehiculo), HttpStatus.OK);
         } catch (Exception e) {
@@ -95,7 +116,7 @@ public class VehiculoController {
     @PatchMapping("/dar-baja/{idVehiculo}")
     public ResponseEntity<BaseResponse> darBajaVehiculo(@PathVariable Integer idVehiculo) {
         try {
-            if(vehiculoService.obtenerVehiculo(idVehiculo) == null) {
+            if (vehiculoService.obtenerVehiculo(idVehiculo) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
     

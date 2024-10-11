@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sise.sistema_gestion_transporte_api.entities.Ruta;
+import com.sise.sistema_gestion_transporte_api.mappers.RutaMapper;
+import com.sise.sistema_gestion_transporte_api.payload.requests.RutaRequest;
 import com.sise.sistema_gestion_transporte_api.services.IRutaService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
+import com.sise.sistema_gestion_transporte_api.shared.Util;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Rutas", description = "Operaciones relacionadas con la gestión de rutas")
 @RestController
@@ -31,6 +36,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class RutaController {
     @Autowired
     private IRutaService rutaService;
+
+    private RutaMapper rutaMapper;
+
+    public RutaController() {
+        rutaMapper = new RutaMapper();
+    }
 
     @Operation(summary = "Listar rutas", description = "Este endpoint permite listar las rutas con " + 
     "el campo estado_auditoria igual a '1'")
@@ -53,7 +64,7 @@ public class RutaController {
         try {
             Ruta ruta = rutaService.obtenerRuta(idRuta);
 
-            if(ruta == null) {
+            if (ruta == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
 
@@ -65,9 +76,13 @@ public class RutaController {
 
     @Operation(summary = "Insertar rutas", description = "Este endpoint permite insertar una ruta")
     @PostMapping("")
-    public ResponseEntity<BaseResponse> insertarRuta(@RequestBody Ruta rutaInsertar) {
+    public ResponseEntity<BaseResponse> insertarRuta(@Valid @RequestBody RutaRequest rutaRequest, Errors errors) {
         try {
-            Ruta ruta = rutaService.insertarRuta(rutaInsertar);
+            if (errors.hasErrors()) {
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+
+            Ruta ruta = rutaService.insertarRuta(rutaMapper.requestToEntity(rutaRequest));
             return new ResponseEntity<>(BaseResponse.success(ruta), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(BaseResponse.error(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,13 +91,19 @@ public class RutaController {
 
     @Operation(summary = "Actualizar rutas", description = "Este endpoint permite actualizar una ruta")
     @PutMapping("/{idRuta}")
-    public ResponseEntity<BaseResponse> actualizarRuta(@PathVariable Integer idRuta, @RequestBody Ruta rutaActualizar) {
+    public ResponseEntity<BaseResponse> actualizarRuta(@PathVariable Integer idRuta, @Valid @RequestBody RutaRequest rutaRequest, Errors errors) {
         try {
-            if(rutaService.obtenerRuta(idRuta) == null) {
+            if (errors.hasErrors()){
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+
+            if (rutaService.obtenerRuta(idRuta) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
             
+            Ruta rutaActualizar = rutaMapper.requestToEntity(rutaRequest);
             rutaActualizar.setIdRuta(idRuta);
+
             Ruta ruta = rutaService.actualizarRuta(rutaActualizar);
             return new ResponseEntity<>(BaseResponse.success(ruta), HttpStatus.OK);
         } catch (Exception e) {
@@ -95,7 +116,7 @@ public class RutaController {
     @PatchMapping("/dar-baja/{idRuta}")
     public ResponseEntity<BaseResponse> darBajaRuta(@PathVariable Integer idRuta) {
         try {
-            if(rutaService.obtenerRuta(idRuta) == null) {
+            if (rutaService.obtenerRuta(idRuta) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
     

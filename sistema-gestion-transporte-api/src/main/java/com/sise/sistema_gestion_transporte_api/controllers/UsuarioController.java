@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sise.sistema_gestion_transporte_api.entities.Usuario;
+import com.sise.sistema_gestion_transporte_api.mappers.UsuarioMapper;
+import com.sise.sistema_gestion_transporte_api.payload.requests.UsuarioRequest;
 import com.sise.sistema_gestion_transporte_api.services.IUsuarioService;
 import com.sise.sistema_gestion_transporte_api.shared.BaseResponse;
+import com.sise.sistema_gestion_transporte_api.shared.Util;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Usuarios", description = "Operaciones relacionadas con la gestión de usuarios")
 @RestController
@@ -31,6 +36,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class UsuarioController {
     @Autowired
     private IUsuarioService usuarioService;
+
+    private UsuarioMapper usuarioMapper;
+
+    public UsuarioController() {
+        usuarioMapper = new UsuarioMapper();
+    }
 
     @Operation(summary = "Listar usuarios", description = "Este endpoint permite listar los usuarios con " + 
     "el campo estado_auditoria igual a '1'")
@@ -53,7 +64,7 @@ public class UsuarioController {
         try {
             Usuario usuario = usuarioService.obtenerUsuario(idUsuario);
 
-            if(usuario == null) {
+            if (usuario == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
 
@@ -65,9 +76,13 @@ public class UsuarioController {
 
     @Operation(summary = "Insertar usuarios", description = "Este endpoint permite insertar un usuario")
     @PostMapping("")
-    public ResponseEntity<BaseResponse> insertarUsuario(@RequestBody Usuario usuarioInsertar) {
+    public ResponseEntity<BaseResponse> insertarUsuario(@Valid @RequestBody UsuarioRequest usuarioRequest, Errors errors) {
         try {
-            Usuario usuario = usuarioService.insertarUsuario(usuarioInsertar);
+            if (errors.hasErrors()) {
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+
+            Usuario usuario = usuarioService.insertarUsuario(usuarioMapper.requestToEntity(usuarioRequest));
             return new ResponseEntity<>(BaseResponse.success(usuario), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(BaseResponse.error(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,13 +91,19 @@ public class UsuarioController {
 
     @Operation(summary = "Actualizar usuarios", description = "Este endpoint permite actualizar un usuario")
     @PutMapping("/{idUsuario}")
-    public ResponseEntity<BaseResponse> actualizarUsuario(@PathVariable Integer idUsuario, @RequestBody Usuario usuarioActualizar) {
+    public ResponseEntity<BaseResponse> actualizarUsuario(@PathVariable Integer idUsuario, @Valid @RequestBody UsuarioRequest usuarioRequest, Errors errors) {
         try {
-            if(usuarioService.obtenerUsuario(idUsuario) == null) {
+            if (errors.hasErrors()){
+                return new ResponseEntity<BaseResponse>(BaseResponse.error(Util.getOneMessageFromErrors(errors.getFieldErrors())),HttpStatus.BAD_REQUEST);
+            }
+
+            if (usuarioService.obtenerUsuario(idUsuario) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
             
+            Usuario usuarioActualizar = usuarioMapper.requestToEntity(usuarioRequest);
             usuarioActualizar.setIdUsuario(idUsuario);
+
             Usuario usuario = usuarioService.actualizarUsuario(usuarioActualizar);
             return new ResponseEntity<>(BaseResponse.success(usuario), HttpStatus.OK);
         } catch (Exception e) {
@@ -95,7 +116,7 @@ public class UsuarioController {
     @PatchMapping("/dar-baja/{idUsuario}")
     public ResponseEntity<BaseResponse> darBajaUsuario(@PathVariable Integer idUsuario) {
         try {
-            if(usuarioService.obtenerUsuario(idUsuario) == null) {
+            if (usuarioService.obtenerUsuario(idUsuario) == null) {
                 return new ResponseEntity<>(BaseResponse.errorNotFound(), HttpStatus.NOT_FOUND);
             }
     
