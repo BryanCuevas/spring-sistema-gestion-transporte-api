@@ -40,4 +40,8 @@ public class Usuario {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
     @JsonIgnore
     private Conductor conductor;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
+    @JsonIgnore
+    private EmpleadoLogistica empleadoLogistica;
 }
