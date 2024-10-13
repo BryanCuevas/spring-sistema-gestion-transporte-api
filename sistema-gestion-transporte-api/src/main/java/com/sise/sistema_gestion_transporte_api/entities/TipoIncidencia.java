@@ -37,6 +37,6 @@ public class TipoIncidencia {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tipoIncidencia")
     @JsonIgnore
-    private List<Viaje> incidencias;
+    private List<Incidencia> incidencias;
 
 }
