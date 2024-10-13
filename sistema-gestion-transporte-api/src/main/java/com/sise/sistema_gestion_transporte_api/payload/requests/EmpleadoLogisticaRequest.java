@@ -13,10 +13,9 @@ import lombok.Data;
 
 @Data
 public class EmpleadoLogisticaRequest {
-    @NotBlank(message = "no puede estar vacío")
+    
     private Empresa empresa;
 
-    @NotBlank(message = "no puede estar vacío")
     private Usuario usuario;
 
     @NotBlank(message = "no puede estar vacío")
@@ -49,4 +48,14 @@ public class EmpleadoLogisticaRequest {
     @NotBlank(message = "no puede estar vacío")
     @URL(message = "debe tener un formato válido")
     private String foto;
+
+    public void setEmpresa(Integer idEmpresa) {
+        this.empresa = new Empresa();
+        this.empresa.setIdEmpresa(idEmpresa);
+    }
+
+    public void setUsuario(Integer idUsuario) {
+        this.usuario = new Usuario();
+        this.usuario.setIdUsuario(idUsuario);
+    }
 }

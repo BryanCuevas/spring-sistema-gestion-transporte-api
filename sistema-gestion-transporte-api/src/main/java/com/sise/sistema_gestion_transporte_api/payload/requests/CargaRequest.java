@@ -11,7 +11,6 @@ import lombok.Data;
 
 @Data
 public class CargaRequest {
-    @NotBlank(message = "no puede estar vacío")
     private Empresa empresa;
 
     @NotBlank(message = "no puede estar vacío")
@@ -26,5 +25,10 @@ public class CargaRequest {
     @Max(value = 15000, message = "no puede exceder las 15 toneladas")
     @Digits(integer = 5, fraction = 0, message = "debe ser un número entero (política de MovilPerú)")
     private Integer peso;
+
+    public void setEmpresa(Integer idEmpresa) {
+        this.empresa = new Empresa();
+        this.empresa.setIdEmpresa(idEmpresa);
+    }
 
 }

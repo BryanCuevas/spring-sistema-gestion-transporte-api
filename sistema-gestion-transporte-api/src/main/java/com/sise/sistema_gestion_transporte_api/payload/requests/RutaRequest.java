@@ -9,10 +9,8 @@ import lombok.Data;
 
 @Data
 public class RutaRequest {
-    @NotBlank(message = "no puede estar vacío")
     private Almacen almacenOrigen;
 
-    @NotBlank(message = "no puede estar vacío")
     private Almacen almacenDestino;
 
     @NotBlank(message = "no puede estar vacío")
@@ -22,4 +20,14 @@ public class RutaRequest {
     @NotBlank(message = "no puede estar vacío")
     @Pattern(regexp = "^[AI]$", message = "debe ser 'A' (Activa) o 'I' (Inactiva)")
     private String estadoRuta;
+
+    public void setAlmacenOrigen(Integer idAlmacenOrigen) {
+        this.almacenOrigen = new Almacen();
+        this.almacenOrigen.setIdAlmacen(idAlmacenOrigen);
+    }
+
+    public void setAlmacenDestino(Integer idAlmacenDestino) {
+        this.almacenDestino = new Almacen();
+        this.almacenDestino.setIdAlmacen(idAlmacenDestino);
+    }
 }

@@ -13,13 +13,10 @@ import lombok.Data;
 
 @Data
 public class ViajeRequest {
-    @NotBlank(message = "no puede estar vacío")
     private Vehiculo vehiculo;
 
-    @NotBlank(message = "no puede estar vacío")
     private Conductor conductor;
-
-    @NotBlank(message = "no puede estar vacío")
+    
     private Ruta ruta;
 
     @NotBlank(message = "no puede estar vacío")
@@ -35,5 +32,20 @@ public class ViajeRequest {
     @NotBlank(message = "no puede estar vacío")
     @Pattern(regexp = "[PEFCA]", message = "debe ser 'P' (Pendiente), 'E' (En curso), 'F' (Finalizado), 'C' (Cancelado) o 'A' (Atrasado)")
     private String estadoViaje;
+
+    public void setVehiculo(Integer idVehiculo) {
+        this.vehiculo = new Vehiculo();
+        this.vehiculo.setIdVehiculo(idVehiculo);
+    }
+
+    public void setConductor(Integer idConductor) {
+        this.conductor = new Conductor();
+        this.conductor.setIdConductor(idConductor);
+    }
+
+    public void setRuta(Integer idRuta) {
+        this.ruta = new Ruta();
+        this.ruta.setIdRuta(idRuta);
+    }
 
 }

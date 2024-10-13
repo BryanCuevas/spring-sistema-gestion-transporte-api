@@ -8,14 +8,22 @@ import lombok.Data;
 
 @Data
 public class IncidenciaRequest {
-    @NotBlank(message = "no puede estar vacío")
     private TipoIncidencia tipoIncidencia;
 
-    @NotBlank(message = "no puede estar vacío")
     private Viaje viaje;
 
     @NotBlank(message = "no puede estar vacío")
     @Size(min = 10, message = "debe tener diez o más caracteres")
     private String descripcion;
+
+    public void setTipoIncidencia(Integer idTipoIncidencia) {
+        this.tipoIncidencia = new TipoIncidencia();
+        this.tipoIncidencia.setIdTipoIncidencia(idTipoIncidencia);
+    }
+
+    public void setViaje(Integer idViaje) {
+        this.viaje = new Viaje();
+        this.viaje.setIdViaje(idViaje);
+    }
 
 }
