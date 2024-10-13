@@ -9,20 +9,20 @@ POST {{BASE_URL}} HTTP/1.1
 content-type: application/json
 
 {
-    "idEmpresa": "1",
+    "empresa": "1",
     "tipoCarga": "G",
     "descripcion": "Madera de roble y sauce",
-    "peso": "1500",
+    "peso": "1500"
 }
 ###
 PUT {{BASE_URL}}/12 HTTP/1.1
 content-type: application/json
 
 {
-    "idEmpresa": "1",
+    "empresa": "1",
     "tipoCarga": "G",
     "descripcion": "Madera de roble y sauce",
-    "peso": "3000",
+    "peso": "3000"
 }
 ###
 PATCH {{BASE_URL}}/dar-baja/5 HTTP/1.1
