@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
@@ -20,7 +21,7 @@ public class CargaRequest {
     @NotBlank(message = "no puede estar vacío")
     private String descripcion;
 
-    @NotBlank(message = "no puede estar vacío")
+    @NotNull(message = "no puede estar vacío")
     @Min(value = 1, message = "debe ser un valor positivo")
     @Max(value = 15000, message = "no puede exceder las 15 toneladas")
     @Digits(integer = 5, fraction = 0, message = "debe ser un número entero (política de MovilPerú)")

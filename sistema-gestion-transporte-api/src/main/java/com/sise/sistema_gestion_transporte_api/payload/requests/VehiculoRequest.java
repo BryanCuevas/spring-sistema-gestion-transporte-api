@@ -3,6 +3,7 @@ package com.sise.sistema_gestion_transporte_api.payload.requests;
 import org.hibernate.validator.constraints.URL;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
@@ -23,11 +24,11 @@ public class VehiculoRequest {
     @NotBlank(message = "no puede estar vacío")
     private String soat;
 
-    @NotBlank(message = "no puede estar vacío")
+    @NotNull(message = "no puede estar vacío")
     @Pattern(regexp = "^[0-9]+$", message = "debe ser numérico")
     private Integer pesoBruto;
 
-    @NotBlank(message = "no puede estar vacío")
+    @NotNull(message = "no puede estar vacío")
     @Pattern(regexp = "^[0-9]+$", message = "debe ser numérico")
     private Integer pesoNeto;
 
