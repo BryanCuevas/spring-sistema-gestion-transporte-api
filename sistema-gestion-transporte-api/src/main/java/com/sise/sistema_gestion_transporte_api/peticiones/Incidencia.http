@@ -1,0 +1,26 @@
+@BASE_URL= http://localhost:8080/api/incidencias
+
+###
+GET {{BASE_URL}}
+###
+GET {{BASE_URL}}/1
+###
+POST {{BASE_URL}} HTTP/1.1
+content-type: application/json
+
+{
+    "tipoIncidencia": "12345678901",
+    "viaje": "Maderera Privada S.A.C",
+    "descripcion": "Madera Peruana"
+}
+###
+PUT {{BASE_URL}}/12 HTTP/1.1
+content-type: application/json
+
+{
+    "tipoIncidencia": "12345678901",
+    "viaje": "Maderera Privada S.A.C",
+    "descripcion": "Madera Peruana"
+}
+###
+PATCH {{BASE_URL}}/dar-baja/5 HTTP/1.1

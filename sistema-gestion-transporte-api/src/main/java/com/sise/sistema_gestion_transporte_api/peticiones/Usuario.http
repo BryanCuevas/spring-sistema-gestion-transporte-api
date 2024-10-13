@@ -1,0 +1,24 @@
+@BASE_URL= http://localhost:8080/api/usuarios
+
+###
+GET {{BASE_URL}}
+###
+GET {{BASE_URL}}/5
+###
+POST {{BASE_URL}} HTTP/1.1
+content-type: application/json
+
+{
+    "nombreUsuario": "ramosj",
+    "clave": "12345"
+}
+###
+PUT {{BASE_URL}}/1 HTTP/1.1
+content-type: application/json
+
+{
+    "nombreUsuario": "Juancito123",
+    "clave": "rosa1"
+}
+###
+PATCH {{BASE_URL}}/dar-baja/5 HTTP/1.1

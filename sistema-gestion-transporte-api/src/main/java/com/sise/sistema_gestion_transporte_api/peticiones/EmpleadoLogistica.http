@@ -1,0 +1,39 @@
+@BASE_URL= http://localhost:8080/api/empleadosLogistica
+
+###
+GET {{BASE_URL}}
+###
+GET {{BASE_URL}}/5
+###
+POST {{BASE_URL}} HTTP/1.1
+content-type: application/json
+
+{
+    "empresa": "1",
+    "usuario": "3",
+    "nombres": "Jesús",
+    "apellidoPaterno": "Ramos",
+    "apellidoMaterno": "Lavarde",
+    "documentoIdentidad": "72718945",
+    "telefono": "973456789",
+    "correo": "juanc@gmail.com",
+    "licencia": "AB123",
+    "foto":"https://example.com/juancarlosnúñez.jpg"
+}
+###
+PUT {{BASE_URL}}/12 HTTP/1.1
+content-type: application/json
+
+{
+    "idUsuario": "1",
+    "nombres": "Juan Carlos",
+    "apellidoPaterno": "Núñez",
+    "apellidoMaterno": "La Rosa",
+    "documentoIdentidad": "72718945",
+    "telefono": "973456789",
+    "correo": "juanc@gmail.com",
+    "licencia": "AB123",
+    "foto":"https://example.com/juanRosa.jpg"
+}
+###
+PATCH {{BASE_URL}}/dar-baja/5 HTTP/1.1

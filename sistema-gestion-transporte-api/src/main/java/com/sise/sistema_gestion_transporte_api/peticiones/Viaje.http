@@ -1,0 +1,24 @@
+@BASE_URL= http://localhost:8080/api/viajesCargas
+
+###
+GET {{BASE_URL}}
+###
+GET {{BASE_URL}}/5
+###
+POST {{BASE_URL}} HTTP/1.1
+content-type: application/json
+
+{
+    "viaje": "ramosj",
+    "carga": "12345"
+}
+###
+PUT {{BASE_URL}}/1 HTTP/1.1
+content-type: application/json
+
+{
+    "viaje": "ramosj",
+    "carga": "12345"
+}
+###
+PATCH {{BASE_URL}}/dar-baja/5 HTTP/1.1

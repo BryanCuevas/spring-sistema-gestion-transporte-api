@@ -1,0 +1,28 @@
+@BASE_URL= http://localhost:8080/api/cargas
+
+###
+GET {{BASE_URL}}
+###
+GET {{BASE_URL}}/5
+###
+POST {{BASE_URL}} HTTP/1.1
+content-type: application/json
+
+{
+    "idEmpresa": "1",
+    "tipoCarga": "G",
+    "descripcion": "Madera de roble y sauce",
+    "peso": "1500",
+}
+###
+PUT {{BASE_URL}}/12 HTTP/1.1
+content-type: application/json
+
+{
+    "idEmpresa": "1",
+    "tipoCarga": "G",
+    "descripcion": "Madera de roble y sauce",
+    "peso": "3000",
+}
+###
+PATCH {{BASE_URL}}/dar-baja/5 HTTP/1.1

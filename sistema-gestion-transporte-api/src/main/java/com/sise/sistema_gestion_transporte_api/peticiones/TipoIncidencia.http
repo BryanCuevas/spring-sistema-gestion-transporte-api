@@ -1,0 +1,22 @@
+@BASE_URL= http://localhost:8080/api/tiposIncidencia
+
+###
+GET {{BASE_URL}}
+###
+GET {{BASE_URL}}/1
+###
+POST {{BASE_URL}} HTTP/1.1
+content-type: application/json
+
+{
+    "detalle": "12345678901"
+}
+###
+PUT {{BASE_URL}}/12 HTTP/1.1
+content-type: application/json
+
+{
+    "detalle": "12345678901"
+}
+###
+PATCH {{BASE_URL}}/dar-baja/5 HTTP/1.1

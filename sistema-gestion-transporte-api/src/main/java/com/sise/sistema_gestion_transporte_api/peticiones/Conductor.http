@@ -1,0 +1,38 @@
+@BASE_URL= http://localhost:8080/api/conductores
+
+###
+GET {{BASE_URL}}
+###
+GET {{BASE_URL}}/7
+###
+POST {{BASE_URL}} HTTP/1.1
+content-type: application/json
+
+{
+    "usuario": "2",
+    "nombres": "Mario",
+    "apellidoPaterno": "Castañeda",
+    "apellidoMaterno": "Flores",
+    "documentoIdentidad": "72718945",
+    "telefono": "973456789",
+    "correo": "juanc@gmail.com",
+    "licencia": "AB123",
+    "foto":"https://example.com/juancarlosnúñez.jpg"
+}
+###
+PUT {{BASE_URL}}/12 HTTP/1.1
+content-type: application/json
+
+{
+    "usuario": "1",
+    "nombres": "Juan Carlos",
+    "apellidoPaterno": "Núñez",
+    "apellidoMaterno": "La Rosa",
+    "documentoIdentidad": "72718945",
+    "telefono": "973456789",
+    "correo": "juanc@gmail.com",
+    "licencia": "AB123",
+    "foto":"https://example.com/juanRosa.jpg"
+}
+###
+PATCH {{BASE_URL}}/dar-baja/5 HTTP/1.1

@@ -1,0 +1,32 @@
+@BASE_URL= http://localhost:8080/api/empresas
+
+###
+GET {{BASE_URL}}
+###
+GET {{BASE_URL}}/1
+###
+POST {{BASE_URL}} HTTP/1.1
+content-type: application/json
+
+{
+    "ruc": "12345678901",
+    "razonSocial": "Maderera Privada S.A.C",
+    "nombreComercial": "Madera Peruana",
+    "direccionFiscal": "Jr. Áncash 123",
+    "telefono": "973456789",
+    "correo": "madeperuana@gmail.com"
+}
+###
+PUT {{BASE_URL}}/12 HTTP/1.1
+content-type: application/json
+
+{
+    "ruc": "12345678901",
+    "razonSocial": "Maderera Privada S.A.C",
+    "nombreComercial": "Madera Peruana",
+    "direccionFiscal": "Jr. Áncash 123",
+    "telefono": "973456789",
+    "correo": "madeperuana@gmail.com"
+}
+###
+PATCH {{BASE_URL}}/dar-baja/5 HTTP/1.1
