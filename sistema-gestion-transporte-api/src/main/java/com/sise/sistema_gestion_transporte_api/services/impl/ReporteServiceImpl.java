@@ -1,5 +1,7 @@
 package com.sise.sistema_gestion_transporte_api.services.impl;
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class ReporteServiceImpl implements IReporteService {
                                     .append("</style>")
                                 .append("</head>")
                                     .append("<body>")
+                                 .append(buildFechaImpresion())
                                  .append(buildHeaderReporte())
                                  .append(buildTituloReporte(reporteMaestroRequest.getTituloReporte()))
                                  .append(buildCabeceraReporte(reporteMaestroRequest.getCabeceras()))
@@ -39,6 +42,12 @@ public class ReporteServiceImpl implements IReporteService {
 
         byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
+    }
+
+    private String buildFechaImpresion(){
+        LocalDateTime fechaHoraActual = LocalDateTime.now();
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        return "<p>Fecha impresión: "+fechaHoraActual.format(formato)+"</p>";
     }
 
     private String buildHeaderReporte(){
@@ -189,6 +198,12 @@ public class ReporteServiceImpl implements IReporteService {
 
     private String buildCSS(){
         return new StringBuilder()
+        .append("@page {")
+            .append("size: A4;")
+                .append("@bottom-right: {")
+                    .append("content: \"Página \" counter(page) \" de \" counter(pages);")
+                .append("}")  
+        .append("}")
        .append("body{")  
                .append("font-family: helvetica;")              
         .append("}")
