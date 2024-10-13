@@ -51,9 +51,11 @@ public class Empresa {
     private LocalDateTime fechaCreacion;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa")
+    @JsonIgnore
     private List<EmpleadoLogistica> empleadosLogistica;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa")
+    @JsonIgnore
     private List<Carga> cargas;
 
 }
