@@ -17,18 +17,18 @@ public class VehiculoRequest {
     private String placa;
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "debe contener solo letras y/o números")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s]+$", message = "debe contener solo letras y/o números")
     private String modelo;
 
     @NotBlank(message = "no puede estar vacío")
     private String soat;
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[0-9]$", message = "debe ser numérico")
+    @Pattern(regexp = "^[0-9]+$", message = "debe ser numérico")
     private Integer pesoBruto;
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[0-9]$", message = "debe ser numérico")
+    @Pattern(regexp = "^[0-9]+$", message = "debe ser numérico")
     private Integer pesoNeto;
 
     @NotBlank(message = "no puede estar vacío")

@@ -14,6 +14,7 @@ public class UsuarioRequest {
     private String nombreUsuario;
 
     @NotBlank(message = "no puede estar vacío")
+    @Pattern(regexp = "^[^\\s]+$", message = "no acepta espacios")
     @Size(min = 5, message = "debe tener cinco o más caracteres")
     private String clave;
 

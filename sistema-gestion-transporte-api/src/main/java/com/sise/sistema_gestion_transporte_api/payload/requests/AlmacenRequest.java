@@ -9,22 +9,22 @@ import lombok.Data;
 @Data
 public class AlmacenRequest {
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "debe contener solo letras")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚ\\s]+$", message = "debe contener solo letras")
     @Size(min = 3, message = "debe tener tres o más caracteres")
     private String departamento;
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "debe contener solo letras")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñ\\s]+$", message = "debe contener solo letras")
     @Size(min = 3, message = "debe tener tres o más caracteres")
     private String provincia;
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "debe contener solo letras")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "debe contener solo letras")
     @Size(min = 3, message = "debe tener tres o más caracteres")
     private String distrito;
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "debe contener solo letras")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "debe contener solo letras")
     @Size(min = 3, message = "debe tener tres o más caracteres")
     private String nombre;
 

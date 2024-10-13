@@ -13,19 +13,19 @@ public class EmpresaRequest {
     private String ruc;
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z\\.]+$", message = "debe tener un formato válido")
     @Size(min = 5, message = "debe tener tres o más caracteres")
     private String razonSocial;
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\.\\s]+$", message = "debe tener un formato válido")
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z\\.]+$", message = "debe tener un foramto válido")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\.\\s]+$", message = "debe tener un foramto válido")
     @Size(min = 3, message = "debe tener tres o más caracteres")
     private String nombreComercial;
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z0-9\\s,\\.-°]+$", message = "debe tener un formato válido")
     @Size(min = 10, message = "debe tener tres o más caracteres")
     private String direccionFiscal;
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s,\\.\\-°]+$", message = "debe tener un formato válido")
 
     @NotBlank(message = "no puede estar vacío")
     @Pattern(regexp = "^[0-9]{9}$", message = "debe ser numérico y contener exactamente 9 dígitos")

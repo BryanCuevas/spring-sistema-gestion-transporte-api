@@ -16,17 +16,17 @@ public class ConductorRequest {
     private Usuario usuario;
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "debe contener solo letras")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "debe contener solo letras")
     @Size(min = 3, message = "debe tener tres o más caracteres")
     private String nombres;
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "debe contener solo letras")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "debe contener solo letras")
     @Size(min = 3, message = "debe tener tres o más caracteres")
     private String apellidoPaterno;
 
     @NotBlank(message = "no puede estar vacío")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "debe contener solo letras")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "debe contener solo letras")
     @Size(min = 3, message = "debe tener tres o más caracteres")
     private String apellidoMaterno;
 
